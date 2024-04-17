@@ -3,33 +3,11 @@ import Shimmer from "./Shimmer";
 import { useParams } from "react-router-dom";
 import { MENU_URL } from "../utils/constants.js";
 import useRestaurantMenu from "../utils/useRestaurantMenu.js";
+import RestaurantCategory from "./RestaurantCategory.js";
 
 const RestaurantMenu = () => {
-  // const [resInfo, setResInfo] = useState(null);
-  // const [resMenu, setResMenu] = useState(null);
-
   const { resId } = useParams();
-  const { resInfo, resMenu } = useRestaurantMenu(resId);
-
-  // useEffect(() => {
-  //   fetchMenu();
-  // }, []);
-
-  // const fetchMenu = async () => {
-  //   const res = await fetch(
-  //     MENU_URL +
-  //       resId +
-  //       "&catalog_qa=undefined&isMenuUx4=true&submitAction=ENTER"
-  //   );
-  //   const data = await res.json();
-  //   setResInfo(data?.data?.cards[2]?.card?.card?.info);
-  //   setResMenu(
-  //     data?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card
-  //       ?.card?.itemCards
-  //   );
-  //   console.log(resMenu);
-  //   console.log(resInfo);
-  // };
+  const { resInfo, resMenu, categories } = useRestaurantMenu(resId);
 
   if (resInfo === null || resMenu === null) {
     return <Shimmer />;
@@ -38,12 +16,20 @@ const RestaurantMenu = () => {
   const { name, id, avgRating, costForTwoMessage, cuisines } = resInfo;
 
   return (
-    <div className="menu">
-      <h1>{name}</h1>
-      <p>
+    <div className="text-center">
+      <h1 className="font-bold my-6 text-2xl">{name}</h1>
+      <p className="font-bold text-lg">
         {cuisines.join(", ")} - {costForTwoMessage}
       </p>
-      <ul>
+      {categories.map((category) => {
+        return (
+          <RestaurantCategory
+            key={category?.card?.card?.title}
+            data={category?.card?.card}
+          />
+        );
+      })}
+      {/* <ul>
         {resMenu.map((menu) => {
           return (
             <li key={menu?.card?.info?.id}>
@@ -53,7 +39,7 @@ const RestaurantMenu = () => {
             </li>
           );
         })}
-      </ul>
+      </ul> */}
     </div>
   );
 };
