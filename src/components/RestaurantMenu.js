@@ -8,6 +8,7 @@ import RestaurantCategory from "./RestaurantCategory.js";
 const RestaurantMenu = () => {
   const { resId } = useParams();
   const { resInfo, resMenu, categories } = useRestaurantMenu(resId);
+  const [showIndex, setShowIndex] = useState(0);
 
   if (resInfo === null || resMenu === null) {
     return <Shimmer />;
@@ -21,25 +22,16 @@ const RestaurantMenu = () => {
       <p className="font-bold text-lg">
         {cuisines.join(", ")} - {costForTwoMessage}
       </p>
-      {categories.map((category) => {
+      {categories.map((category, index) => {
         return (
           <RestaurantCategory
             key={category?.card?.card?.title}
             data={category?.card?.card}
+            showItems={index === showIndex ? true : false}
+            setShowIndex={() => setShowIndex(index)}
           />
         );
       })}
-      {/* <ul>
-        {resMenu.map((menu) => {
-          return (
-            <li key={menu?.card?.info?.id}>
-              {menu?.card?.info?.name} - Rs.{" "}
-              {menu?.card?.info?.defaultPrice / 100 ||
-                menu?.card?.info?.price / 100}
-            </li>
-          );
-        })}
-      </ul> */}
     </div>
   );
 };
